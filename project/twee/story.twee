@@ -2,12 +2,6 @@
 Tweego Basic Setup
 
 :: Start
-@@#hello;Hello World!@@
+@@#hello;Hello World!!!!@@
 
-:: StoryData
-{
-        "ifid": "INERT VALID IFID HERE",
-        "format": "SugarCube",
-        "format-version": "2.36.1",
-        "zoom": 1
-}
+

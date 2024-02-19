@@ -5,11 +5,13 @@
   "main": "build.js",
   "scripts": {
     "start": "cd dist && npx http-server -c0 -o",
-    "compile:src": "node build.js",
+    "compile:src": "node buissssssssssssssssssld.js",
     "compile:twee": "tweego -o dist/index.html -m src/modules/ --head=\"src/head-content.html\" project",
+    "compile:ts": "tsc -w",
     "watch:twee": "tweego -o dist/index.html -m src/modules/ --head=\"src/head-content.html\" project -w",
     "testmode:twee": "tweego -o dist/index.html -m src/modules/ --head=\"src/head-content.html\" project -t",
-    "build": "npm run compile:src && npm run compile:twee",
+    "build": "npm run compile:src && npm run compile:twee && npm run compile:ts",
+    "dev": "concurrently \"npm run watch:twee\" \"npm run compile:ts\" \"npm run start\"",
     "build:test": "npm run compile:src && npm run testmode:twee"
   },
   "keywords": [
@@ -25,10 +27,13 @@
   "devDependencies": {
     "@babel/core": "^7.18.9",
     "@babel/preset-env": "^7.18.9",
+    "@types/twine-sugarcube": "^2.36.10",
     "autoprefixer": "^10.4.7",
     "clean-css": "^5.3.1",
+    "concurrently": "^8.2.2",
     "fs-jetpack": "^4.3.1",
     "http-server": "^14.1.1",
+    "nodemon": "^3.0.3",
     "postcss": "^8.4.14",
     "terser": "^5.14.2",
     "typescript": "^5.3.3"
