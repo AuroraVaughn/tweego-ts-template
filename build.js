@@ -1,3 +1,4 @@
+const ts = require("typescript");
 // list of javascript and CSS files (optional)
 // leave the arrays empty and the files in the relevant folders will be compiled in the order provided by the OS
 const files = {
@@ -35,7 +36,10 @@ const babelOptions = {
         ]
     }]]
 };
-
+const tsOptions = {
+    module: ts.ModuleKind.ES2015,
+    target: ts.ScriptTarget.ES5
+};
 // you shouldn't need to change anything below this comment if you're just editing your compiling options!
 
 const jetpack = require("fs-jetpack");
@@ -60,26 +64,33 @@ function compileCSS () {
     });
 }
 
-function compileJS () {
-    let js = (files.js && files.js instanceof Array && files.js.length > 0) ? 
-        files.js.map( fileName => {
-            return jetpack.read(`${jsPath}${fileName}`);
-        }).join("\n\n") : 
-        jetpack.find(jsPath, { matching : "*.js" }).map( fileName => {
-            return jetpack.read(fileName);
-        }).join("\n\n");
+function compileJSandTS() {
+    let jsFiles = files.js.length > 0 ? files.js : jetpack.find(jsPath, { matching: "*.js" });
+    let tsFiles = jetpack.find(jsPath, { matching: "*.ts" });
 
-    js = Babel.transform(js, babelOptions).code;
+    let compiledJS = jsFiles.map(fileName => {
+        return jetpack.read(`${jsPath}${fileName}`);
+    }).join("\n\n");
 
-    Terser.minify(js, terserOptions).then(result => {
+    let compiledTS = tsFiles.map(fileName => {
+        const tsContent = jetpack.read(fileName);
+        let output = ts.transpileModule(tsContent, { compilerOptions: tsOptions });
+        return output.outputText;
+    }).join("\n\n");
+
+    let finalJS = `${compiledJS}\n\n${compiledTS}`;
+
+    finalJS = Babel.transform(finalJS, babelOptions).code;
+
+    Terser.minify(finalJS, terserOptions).then(result => {
         if (result.error) {
             console.error(result.error);
+        } else {
+            jetpack.write(`${outputPath}build.js`, result.code, { atomic: true });
         }
-    
-        jetpack.write(`${outputPath}build.js`, result.code, { atomic : true });
     });
 }
 
 // run
 compileCSS();
-compileJS();
+compileJSandTS();
