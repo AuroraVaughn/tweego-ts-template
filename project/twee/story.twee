@@ -3,3 +3,11 @@ Tweego Basic Setup
 
 :: Start
 @@#hello;Hello World!@@
+
+:: StoryData
+{
+        "ifid": "8CD93712-C9A1-4508-AA29-0385B929193F",
+        "format": "SugarCube",
+        "format-version": "2.36.1",
+        "zoom": 1
+}
